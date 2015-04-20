@@ -26,7 +26,6 @@ from urlparse import urlparse,urljoin
 from formatter import DumbWriter,AbstractFormatter
 from cStringIO import StringIO
 import sys 
-import threadpool
 import time
 
 
@@ -42,9 +41,10 @@ sys.setdefaultencoding('utf8')
 '''
 #downloadÒýÇæ
 class download(object):
-	def __init__(self,count,path):
+	def __init__(self,count,path,base):
 		self.count = count
 		self.path = path
+		self.base = base
 		#self.threadnum = threadnum
 
 	def getDownloadLink(self,url):
@@ -84,15 +84,16 @@ class download(object):
 	def gothread(self):
 		#½¨Á¢½ø³Ì³Ø
 		#pool = threadpool.ThreadPool(self.threadnum)
-		base = '7644000'
+		base = '7644180'
 		#Á½¸ölistºÏ²¢£¬Ö±½ÓÏà¼Ó¾Í¿ÉÒÔ
 		for i in range(self.count):
-			url = 'http://shouji.baidu.com/software/item?docid=%s' % str(int(base) + i)
+			url = 'http://shouji.baidu.com/software/item?docid=%s' % str(int(self.base) + i)
 			#pool.add_task(self.getDownloadLink,url)
 			self.getDownloadLink(url)
 			#time.sleep(1.2)
 		#join and destroy all threads
 		#pool.destroy()
+
 
 def usage():
 	test = '''
@@ -107,11 +108,12 @@ def usage():
 def main():
 	usage()
 	count = raw_input('how many apk do you want to download?\n')
+	base = raw_input('input the base of the apk,should like about(7644180):\n')
 	#threadnum = raw_input('the thread number you want to run:\n')
 	path = 'download_path'
 	if not os.path.exists(path):
 		os.mkdir(path)
-	down = download(int(count),path)
+	down = download(int(count),path,base)
 	down.gothread()
 
 
